@@ -2,12 +2,7 @@
 
 [mysql 설치](https://dev.mysql.com/downloads/file/?id=514518)
 
-현재 구름 IDE로 테스트 서버 베포 시도중
-
-
-[참고자료-flask챗봇 연결](https://kkkapuq.tistory.com/110)
-
-[참고자료2-flask챗봇 연결](https://novice-engineers.tistory.com/23)
+현재 구름 IDE로 테스트 서버 베포 시도중 -> 해결
 
 1. 스트레스 레벨 -> low, medium, high, very high
 
@@ -24,3 +19,9 @@
 7. 세발 여부 -> Y,N
 
 MYSQL 연동중 -> 해결
+
+# 남은 작업
+
+1. 제품 추천 코딩
+
+2. 이미지도 같이
