@@ -11,6 +11,12 @@ msg=[]
 model = None
 val = []
 
+# 문진 모델 불러오기
+def load_model():
+    global model
+    model = tensorflow.keras.models.load_model('/workspace/firstContainer/daehan.h5')
+    
+
 # ubuntu서버의 mysql연동
 conn = pymysql.connect(host='localhost',
                        port=3306,
@@ -19,22 +25,37 @@ conn = pymysql.connect(host='localhost',
                        db='product',
                        charset='utf8')
 
-# sql문 임의로 생성(test)
-sql = "SELECT * FROM tmp WHERE brand = %s"
+
+# #1번질문
+# def one(){
+#     #만약 val값이 "건성"이라면 
+#     return "feature = 건성"
+# }
+
+
 
 # sql문 결과 출력(test)
-def result_sql():
+def result_sql(level):
+    # sql문 임의로 생성(test)
+    if level==0:
+        sql = "SELECT * FROM shampoo_0 WHERE brand = %s"
+    elif level==1:
+        sql = "SELECT * FROM shampoo_1 WHERE brand = %s"
+    elif level==2:
+        sql = "SELECT * FROM shampoo_2 WHERE brand = %s"
+    else:
+        sql = "SELECT * FROM shampoo_3 WHERE brand = %s"
+    
+    
     with conn:
         with conn.cursor() as cur:
-            cur.execute(sql,('TS'))
+            cur.execute(sql,('닥터그루트'))
             result = cur.fetchall()
             for data in result:
                 print(data)
 
-# 문진 모델 불러오기
-def load_model():
-    global model
-    model = tensorflow.keras.models.load_model('/workspace/firstContainer/daehan.h5')
+                
+
 
     
 # 그냥 요청값 불러오는지 테스트코드
@@ -81,16 +102,27 @@ def api_result():
         msg += i
     print(msg)
     result_arr = model.predict(np.array([[int(msg[0]),int(msg[1]),int(msg[2]),int(msg[3]),int(msg[4]),int(msg[5]),int(msg[6])]]))[0][0]
-
+    
     # np array로 형변환해서 반환
     result_str = str(result_arr)
+    result_float = float(result_str)
+    
+    if(0 <= result_float*100 < 10):
+        answer = 0
+    elif(10 <= result_float*100 < 50):
+        answer = 1
+    elif(50 <= result_float*100 < 90):
+        answer = 2
+    else:
+        answer = 3
+
     res = {
             "version": "2.0",
             "template": {
                 "outputs": [
                     {
                         "simpleText": {
-                            "text": result_str
+                            "text": answer
                         }
                     }
                 ]
@@ -99,12 +131,12 @@ def api_result():
     
     # 선택값 초기화
     val=[]
+    result_sql(answer)
     return flask.jsonify(res)
 
     
 # 메인
 if __name__ == "__main__":
     load_model()
-    result_sql()
     application.run(host='0.0.0.0')
     
