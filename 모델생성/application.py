@@ -31,8 +31,33 @@ conn = pymysql.connect(host='localhost',
 #     #만약 val값이 "건성"이라면 
 #     return "feature = 건성"
 # }
+def one(){
+    if val=="건성"
+        return "feature = 건성"
+    else
+        continue
+    }
+    
+def two(){
+    if val=="건성"
+        return "feature = 건성"
+    else
+        continue
+}
 
+def three(){
+    if val=="지성"
+        return "feature = 지성"
+    else
+        continue
+}
 
+def four(){
+    if val=="지루성"
+        return "feature = 지루성"
+    else
+        continue
+}
 
 # sql문 결과 출력(test)
 def result_sql(level):
