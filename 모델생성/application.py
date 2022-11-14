@@ -31,33 +31,85 @@ conn = pymysql.connect(host='localhost',
 #     #만약 val값이 "건성"이라면 
 #     return "feature = 건성"
 # }
-def one(){
-    if val=="건성"
-        return "feature = 건성"
-    else
-        continue
-    }
+def one():
+    if val=="건성":
+        return "건성"
+
     
-def two(){
-    if val=="건성"
-        return "feature = 건성"
-    else
-        continue
-}
+def two():
+    if val=="건성":
+        return "건성"
 
-def three(){
-    if val=="지성"
-        return "feature = 지성"
-    else
-        continue
-}
 
-def four(){
-    if val=="지루성"
-        return "feature = 지루성"
-    else
-        continue
-}
+
+def three():
+    if val=="지성":
+        return "지성"
+
+
+def four():
+    if val=="지루성":
+        return "지루성"
+
+def five():
+    if val=="지성":
+        return "지성"
+
+    
+def six():
+    if val=="지성":
+        return "지성"
+
+    
+
+def seven():
+    if val=="지성":
+        return "지성"
+
+
+def seven():
+    if val=="지성":
+        return "지성"
+
+def eight():
+    if val=="쿨링":
+        return "쿨링"
+
+def nine():
+    if val=="민감성":
+        return "민감성"
+ 
+
+def ten():
+    if val=="민감성":
+        return "민감성"
+   
+
+def eleven():
+    if val=="민감성":
+        return "민감성"
+ 
+def twelve():
+    if val=="민감성":
+        return "민감성"
+ 
+def thirteen():
+    if val=="탈모":
+        return "탈모"
+   
+def fourteen():
+    if val=="민감성":
+        return "민감성
+    
+
+def fifteenth():
+    if val=="지루성":
+        return "지루성"
+
+def sixteen():
+    if val=="탈모":
+        return "탈모"
+
 
 # sql문 결과 출력(test)
 def result_sql(level):
@@ -164,4 +216,3 @@ def api_result():
 if __name__ == "__main__":
     load_model()
     application.run(host='0.0.0.0')
-    
