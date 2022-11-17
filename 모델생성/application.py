@@ -15,8 +15,8 @@ val = []
 def load_model():
     global model
     model = tensorflow.keras.models.load_model('/workspace/firstContainer/daehan.h5')
-    
 
+    
 # ubuntu서버의 mysql연동
 conn = pymysql.connect(host='localhost',
                        port=3306,
@@ -26,115 +26,87 @@ conn = pymysql.connect(host='localhost',
                        charset='utf8')
 
 
-# #1번질문
-# def one(){
-#     #만약 val값이 "건성"이라면 
-#     return "feature = 건성"
-# }
-def one():
-    if val=="건성":
-        return "건성"
-
-    
-def two():
-    if val=="건성":
-        return "건성"
 
 
+#건성일때 카운트증가
+cnt_gunsung = 0
+@application.route("/api/get_gunsung",methods=["POST"])
+def get_gunsung():
+    global cnt_gunsung
+    req=flask.request.get_json()
+    msg = req['action']['clientExtra']['val']
+    if msg == "건성":
+        cnt_gunsung += 1
+    return req
 
-def three():
-    if val=="지성":
-        return "지성"
+#민감성일때 카운트증가
+cnt_mingam = 0
+@application.route("/api/get_mingam",methods=["POST"])
+def get_mingam():
+    global cnt_mingam
+    req=flask.request.get_json()
+    msg = req['action']['clientExtra']['val']
+    if msg == "민감성":
+        cnt_mingam += 1
+    return req
+        
+#가격 가져오기
+price = 0
+@application.route("/api/get_price",methods=["POST"])
+def check_price():
+    global price
+    req = flask.request.get_json()
+    price = int(req['action']['clientExtra']['val'])
+    print(price)
+    return req
 
-
-def four():
-    if val=="지루성":
-        return "지루성"
-
-def five():
-    if val=="지성":
-        return "지성"
-
-    
-def six():
-    if val=="지성":
-        return "지성"
-
-    
-
-def seven():
-    if val=="지성":
-        return "지성"
-
-
-def seven():
-    if val=="지성":
-        return "지성"
-
-def eight():
-    if val=="쿨링":
-        return "쿨링"
-
-def nine():
-    if val=="민감성":
-        return "민감성"
- 
-
-def ten():
-    if val=="민감성":
-        return "민감성"
-   
-
-def eleven():
-    if val=="민감성":
-        return "민감성"
- 
-def twelve():
-    if val=="민감성":
-        return "민감성"
- 
-def thirteen():
-    if val=="탈모":
-        return "탈모"
-   
-def fourteen():
-    if val=="민감성":
-        return "민감성
-    
-
-def fifteenth():
-    if val=="지루성":
-        return "지루성"
-
-def sixteen():
-    if val=="탈모":
-        return "탈모"
-
-
-# sql문 결과 출력(test)
+#SQL결과출력
 def result_sql(level):
-    # sql문 임의로 생성(test)
-    if level==0:
-        sql = "SELECT * FROM shampoo_0 WHERE brand = %s"
-    elif level==1:
-        sql = "SELECT * FROM shampoo_1 WHERE brand = %s"
-    elif level==2:
-        sql = "SELECT * FROM shampoo_2 WHERE brand = %s"
-    else:
-        sql = "SELECT * FROM shampoo_3 WHERE brand = %s"
-    
+    global price
+    print("함수들어오자마자 ", price)
     
     with conn:
         with conn.cursor() as cur:
-            cur.execute(sql,('닥터그루트'))
+            #건성체크
+            if cnt_gunsung <= 2:
+                q1 = "NOT LIKE '%건성%'"
+            else:
+                q1 = "LIKE '%건성%'"
+                
+            #민감성체크
+            if cnt_mingam <= 1:
+                q2 = "NOT LIKE '%민감성%'"
+            else:
+                q2 = "LIKE '%민감성%'" 
+            
+            #가격체크
+            if price == 15000:
+                q3 = "price <= 15000"
+
+            elif price == 30000:
+                q3 = "price > 15000 && price <= 30000"
+            else:
+                q3 = "price > 30000"
+
+ 
+            #sql문 작성
+            if level == 0:
+                sql = " "
+            elif level == 3:
+                sql = " "
+            else:
+                sql = (
+                    "SELECT * "
+                    "FROM shampoo_1 "
+                    "WHERE feature " +q1+ " AND feature " +q2+ " AND "+q3)
+            cur.execute(sql)
             result = cur.fetchall()
             for data in result:
                 print(data)
 
-                
-
-
-    
+   
+            
+            
 # 그냥 요청값 불러오는지 테스트코드
 @application.route("/api/hello",methods=["POST"])
 def api_hello():
@@ -208,7 +180,7 @@ def api_result():
     
     # 선택값 초기화
     val=[]
-    result_sql(answer)
+    result_sql(1)
     return flask.jsonify(res)
 
     
@@ -216,3 +188,4 @@ def api_result():
 if __name__ == "__main__":
     load_model()
     application.run(host='0.0.0.0')
+    
