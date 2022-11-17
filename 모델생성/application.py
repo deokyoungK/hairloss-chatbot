@@ -16,16 +16,6 @@ def load_model():
     global model
     model = tensorflow.keras.models.load_model('/workspace/firstContainer/daehan.h5')
 
-    
-# ubuntu서버의 mysql연동
-conn = pymysql.connect(host='localhost',
-                       port=3306,
-                       user='root',
-                       passwd='123',
-                       db='product',
-                       charset='utf8')
-
-
 
 
 #건성일때 카운트증가
@@ -62,8 +52,16 @@ def check_price():
 
 #SQL결과출력
 def result_sql(level):
+    print(level)
     global price
-    print("함수들어오자마자 ", price)
+    
+    # ubuntu서버의 mysql연동
+    conn = pymysql.connect(host='localhost',
+                       port=3306,
+                       user='root',
+                       passwd='123',
+                       db='product',
+                       charset='utf8')
     
     with conn:
         with conn.cursor() as cur:
@@ -91,22 +89,34 @@ def result_sql(level):
  
             #sql문 작성
             if level == 0:
-                sql = " "
+                sql = (
+                    "SELECT * "
+                    "FROM shampoo_0 "
+                    "WHERE " + q3)
             elif level == 3:
-                sql = " "
-            else:
+                sql = (
+                    "SELECT * "
+                    "FROM shampoo_3 "
+                    "WHERE " + q3)
+            elif level == 1:
                 sql = (
                     "SELECT * "
                     "FROM shampoo_1 "
                     "WHERE feature " +q1+ " AND feature " +q2+ " AND "+q3)
+            else:
+                sql = (
+                    "SELECT * "
+                    "FROM shampoo_2 "
+                    "WHERE feature " +q1+ " AND feature " +q2+ " AND "+q3)
+                
             cur.execute(sql)
             result = cur.fetchall()
             for data in result:
                 print(data)
 
    
-            
-            
+
+
 # 그냥 요청값 불러오는지 테스트코드
 @application.route("/api/hello",methods=["POST"])
 def api_hello():
@@ -180,7 +190,7 @@ def api_result():
     
     # 선택값 초기화
     val=[]
-    result_sql(1)
+    result_sql(2)
     return flask.jsonify(res)
 
     
