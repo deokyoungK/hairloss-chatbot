@@ -24,8 +24,8 @@ cnt_gunsung = 0
 def get_gunsung():
     global cnt_gunsung
     req=flask.request.get_json()
-    msg = req['action']['clientExtra']['val']
-    if msg == "건성":
+    req_msg = req['action']['clientExtra']['val']
+    if req_msg == "건성":
         cnt_gunsung += 1
     return req
 
@@ -35,8 +35,8 @@ cnt_mingam = 0
 def get_mingam():
     global cnt_mingam
     req=flask.request.get_json()
-    msg = req['action']['clientExtra']['val']
-    if msg == "민감성":
+    req_msg = req['action']['clientExtra']['val']
+    if req_msg == "민감성":
         cnt_mingam += 1
     return req
         
@@ -52,7 +52,6 @@ def check_price():
 
 #SQL결과출력
 def result_sql(level):
-    print(level)
     global price
     
     # ubuntu서버의 mysql연동
@@ -114,30 +113,43 @@ def result_sql(level):
             for data in result:
                 print(data)
 
+            res = {
+                    "version": "2.0",
+                    "template": {
+                        "outputs": [
+                            {
+                                "simpleText": {
+                                    "text": msg
+                                }
+                            }
+                        ]   
+                    }
+                }
    
 
 
-# 그냥 요청값 불러오는지 테스트코드
-@application.route("/api/hello",methods=["POST"])
-def api_hello():
-    global msg
-    req=flask.request.get_json()
+# # 그냥 요청값 불러오는지 테스트코드
+# @application.route("/api/hello",methods=["POST"])
+# def api_hello():
+#     global msg
+#     req=flask.request.get_json()
     
-    # 사용자가 입력한 요청메시지 추출
-    msg=req['userRequest']['utterance']
-    res = {
-            "version": "2.0",
-            "template": {
-                "outputs": [
-                    {
-                        "simpleText": {
-                            "text": msg
-                        }
-                    }
-                ]   
-            }
-        }
-    return flask.jsonify(res)
+#     # 사용자가 입력한 요청메시지 추출
+#     msg=req['userRequest']['utterance']
+
+#     res = {
+#             "version": "2.0",
+#             "template": {
+#                 "outputs": [
+#                     {
+#                         "simpleText": {
+#                             "text": msg
+#                         }
+#                     }
+#                 ]   
+#             }
+#         }
+#     return flask.jsonify(res)
 
 
 # 사용자 요청을 배열에 저장
@@ -149,10 +161,13 @@ def api_val():
     print(req['action']['clientExtra']['val'])
     return req
 
-# 결과 출력
+
+answer = 0
+# 문진모델 예
 @application.route("/api/result",methods=["POST"])
 def api_result():
     global val
+    global answer
     result_arr = []
     
     req=flask.request.get_json()
@@ -175,6 +190,8 @@ def api_result():
     else:
         answer = 3
 
+
+        
     res = {
             "version": "2.0",
             "template": {
@@ -184,14 +201,37 @@ def api_result():
                             "text": answer
                         }
                     }
+                ],
+                "quickReplies": [
+                    {
+                          "label": "블록이동",
+                          "action": "block",
+                          "blockId": "636b873e3236e276c315a9f6",
+                         #  "extra": {
+                         #  "val": "아토피",
+                         #  "key2": "value2"
+                         # }
+                    }
                 ]
+                
             }
         }
     
     # 선택값 초기화
     val=[]
-    result_sql(2)
+    
     return flask.jsonify(res)
+
+
+
+
+# 결과출력
+@application.route("/api/final",methods=["POST"])
+def result():
+    global answer
+    result_sql(answer)
+    return str(answer)
+
 
     
 # 메인
