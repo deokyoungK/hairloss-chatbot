@@ -10,6 +10,7 @@ application = flask.Flask(__name__)
 msg=[]
 model = None
 val = []
+answer = 0
 
 # 문진 모델 불러오기
 def load_model():
@@ -50,7 +51,21 @@ def check_price():
     print(price)
     return req
 
-#SQL결과출력
+
+
+
+
+
+
+# 결과출력
+@application.route("/api/final",methods=["POST"])
+def result():
+    global answer
+    return result_sql(answer)
+
+
+# SQL결과
+# @application.route("/api/print_result",methods=["POST"])
 def result_sql(level):
     global price
     
@@ -79,7 +94,7 @@ def result_sql(level):
             #가격체크
             if price == 15000:
                 q3 = "price <= 15000"
-
+        
             elif price == 30000:
                 q3 = "price > 15000 && price <= 30000"
             else:
@@ -91,65 +106,80 @@ def result_sql(level):
                 sql = (
                     "SELECT * "
                     "FROM shampoo_0 "
-                    "WHERE " + q3)
+                    "WHERE " + q3 + " ORDER BY RAND()")
             elif level == 3:
                 sql = (
                     "SELECT * "
                     "FROM shampoo_3 "
-                    "WHERE " + q3)
+                    "WHERE " + q3 + " ORDER BY RAND()")
             elif level == 1:
                 sql = (
                     "SELECT * "
                     "FROM shampoo_1 "
-                    "WHERE feature " +q1+ " AND feature " +q2+ " AND "+q3)
+                    "WHERE feature " +q1+ " AND feature " +q2+ " AND "+q3 + " ORDER BY RAND()")
             else:
                 sql = (
                     "SELECT * "
                     "FROM shampoo_2 "
-                    "WHERE feature " +q1+ " AND feature " +q2+ " AND "+q3)
+                    "WHERE feature " +q1+ " AND feature " +q2+ " AND "+q3 + " ORDER BY RAND()")
                 
             cur.execute(sql)
             result = cur.fetchall()
-            for data in result:
-                print(data)
+            rl = list(result)
+            
+            # 제품종류, 이름, 가격
+            p_type1 = rl[0][1]
+            p_type2 = rl[1][1]
+            p_type3 = rl[2][1]
+                    
+            p_name1 = rl[0][2]
+            p_name2 = rl[1][2]
+            p_name3 = rl[2][2]
+            
+            p_price1 = rl[0][4]
+            p_price2 = rl[1][4]
+            p_price3 = rl[2][4]
+
 
             res = {
-                    "version": "2.0",
-                    "template": {
-                        "outputs": [
+              "version": "2.0",
+              "template": {
+                "outputs": [
+                  {
+                    "carousel": {
+                      "type": "listCard",
+                      "items": [
+                        {
+                          "header": {
+                            "title": "추천 제품"
+                          },
+                          "items": [
                             {
-                                "simpleText": {
-                                    "text": msg
-                                }
+                              "title": p_name1 + "(" +p_type1+ ")" ,
+                              "description": p_price1+"원",
+                              "imageUrl": "https://postfiles.pstatic.net/MjAyMjExMjFfOCAg/MDA…Sv8iBvt3xjNGtwid54Ig.JPEG.a3a2a/0_1.jpg?type=w773"
+                            },
+                            {
+                              "title": p_name2 + "(" +p_type2+ ")",
+                              "description": p_price2+"원",
+                              "imageUrl": "https://t1.kakaocdn.net/openbuilder/docs_image/02_img_02.jpg"
+                            },
+                            {
+                              "title": p_name3 + "(" +p_type3+ ")",
+                              "description": p_price3+"원",
+                              "imageUrl": "https://t1.kakaocdn.net/openbuilder/docs_image/02_img_03.jpg"
                             }
-                        ]   
+                          ]
+                        }
+                      ]
                     }
-                }
-   
+                  }
+                ]
+              }
+            }
+        
+            return flask.jsonify(res)
 
-
-# # 그냥 요청값 불러오는지 테스트코드
-# @application.route("/api/hello",methods=["POST"])
-# def api_hello():
-#     global msg
-#     req=flask.request.get_json()
-    
-#     # 사용자가 입력한 요청메시지 추출
-#     msg=req['userRequest']['utterance']
-
-#     res = {
-#             "version": "2.0",
-#             "template": {
-#                 "outputs": [
-#                     {
-#                         "simpleText": {
-#                             "text": msg
-#                         }
-#                     }
-#                 ]   
-#             }
-#         }
-#     return flask.jsonify(res)
 
 
 # 사용자 요청을 배열에 저장
@@ -162,7 +192,6 @@ def api_val():
     return req
 
 
-answer = 0
 # 문진모델 예
 @application.route("/api/result",methods=["POST"])
 def api_result():
@@ -206,11 +235,8 @@ def api_result():
                     {
                           "label": "블록이동",
                           "action": "block",
-                          "blockId": "636b873e3236e276c315a9f6",
-                         #  "extra": {
-                         #  "val": "아토피",
-                         #  "key2": "value2"
-                         # }
+                          "blockId": "636b873e3236e276c315a9f6"
+
                     }
                 ]
                 
@@ -222,15 +248,6 @@ def api_result():
     
     return flask.jsonify(res)
 
-
-
-
-# 결과출력
-@application.route("/api/final",methods=["POST"])
-def result():
-    global answer
-    result_sql(answer)
-    return str(answer)
 
 
     
