@@ -1,0 +1,15 @@
+{
+    "userid":{
+        "predict":{
+            "Hx":[],
+            "image":0,
+            "answer":0
+        },
+        "product":{
+            "level":0,
+            "cnt_gunsung":0,
+            "cnt_mingam":0,
+            "price":0
+        }
+    }
+}
