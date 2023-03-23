@@ -12,16 +12,16 @@
 - 개발 환경: jupyter notebook(AI model), Kakao openbuilder(Chatbot), flask(Server), mysql(DB) 
 - 본인 역할: 문진 AI 모델 생성(50%), flask API 설계(70%)   
 
-### 개발 배경
+### 1. 개발 배경
 <img src = "https://user-images.githubusercontent.com/74487747/226972974-005091f9-e4d3-4a2d-8d93-98283465fd64.png" width="700" >
 
-### 시스템 구상도
+### 2. 시스템 구상도
 <img src = "https://user-images.githubusercontent.com/74487747/226972776-afa12ad7-13b3-4898-bd75-58860f973110.png" width="700" > 
 
-### 시나리오
+### 3. 시나리오
 <img src = "https://user-images.githubusercontent.com/74487747/226973244-dc0515af-d605-40bd-b358-fcb02be28fb2.png" width="700" > 
 
-### AI 모델 활용
+### 4. AI 모델 활용
 <img src = "https://user-images.githubusercontent.com/74487747/226973534-511726ec-8f10-4959-8ff4-4e578b6c3fb4.png" width="700" >
 
 ## 시연
@@ -39,6 +39,13 @@
 <img src = "https://user-images.githubusercontent.com/74487747/227071414-cb439bd3-2df6-4915-8066-a9bf02448080.png" width="700" >  
 
 <img src = "https://user-images.githubusercontent.com/74487747/227076971-972a76c9-1d9f-49c1-a445-60d6f21e9c8e.gif " width="700" >
+
+## 이슈
+
+
+
+
+
 
 
 
